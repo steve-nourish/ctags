@@ -119,6 +119,7 @@ typedef struct sOptionValues {
 	boolean quiet;		      /* --quiet */
 	boolean allowXcmdInHomeDir;     /* --_allow-xcmd-in-homedir */
 	boolean fatalWarnings;	/* --_fatal-warnings */
+	boolean gtags;		    /* --gtags print a type string for gtags */
 #ifdef DEBUG
 	long debugLevel;        /* -D  debugging output */
 	unsigned long breakLine;/* -b  source line at which to call lineBreak() */

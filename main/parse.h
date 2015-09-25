@@ -108,6 +108,7 @@ extern parserDefinitionFunc PARSER_LIST;
 
 /* Language processing and parsing */
 extern int makeSimpleTag (const vString* const name, kindOption* const kinds, const int kind);
+extern int makeSimpleReferenceTag (const vString* const name, kindOption* const kinds, const int kind);
 extern void makeFileTag (const char *const fileName);
 extern parserDefinition* parserNew (const char* name);
 extern parserDefinition* parserNewFull (const char* name, char fileKind);

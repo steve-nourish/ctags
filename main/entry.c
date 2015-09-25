@@ -721,18 +721,21 @@ static char *readSourceLineAnyway (vString *const vLine, const tagEntryInfo *con
 static int writeXrefEntry (const tagEntryInfo *const tag)
 {
 	const char *line;
-	int length;
+	int length = 0;
 
 	if (tag->isFileEntry)
 		return 0;
 
 	line = readSourceLineAnyway (TagFile.vLine, tag, NULL);
 
+	if (Option.gtags == 1)
+		length += fprintf(TagFile.fp, "%c ", tag->type);
+
 	if (Option.tagFileFormat == 1)
-		length = fprintf (TagFile.fp, "%-16s %4lu %-16s ", tag->name,
+		length += fprintf (TagFile.fp, "%-16s %4lu %-16s ", tag->name,
 				tag->lineNumber, tag->sourceFileName);
 	else
-		length = fprintf (TagFile.fp, "%-16s %-10s %4lu %-16s ", tag->name,
+		length += fprintf (TagFile.fp, "%-16s %-10s %4lu %-16s ", tag->name,
 				  tag->kind->name, tag->lineNumber, tag->sourceFileName);
 
 	/* If no associated line for tag is found, we cannot prepare
@@ -915,7 +918,12 @@ static int writeLineNumberEntry (const tagEntryInfo *const tag)
 
 static int writeCtagsEntry (const tagEntryInfo *const tag)
 {
-	int length = fprintf (TagFile.fp, "%s\t%s\t",
+	int length = 0;
+
+	if (Option.gtags == 1)
+		length += fprintf(TagFile.fp, "%c ", tag->type);
+
+	length += fprintf (TagFile.fp, "%s\t%s\t",
 		tag->name, tag->sourceFileName);
 
 	if (tag->lineNumberEntry)
@@ -1089,6 +1097,9 @@ extern int makeTagEntry (const tagEntryInfo *const tag)
 	Assert (tag->name != NULL && strchr (tag->name, '\t') == NULL);
 	Assert (getSourceLanguageFileKind() == tag->kind || isSourceLanguageKindEnabled (tag->kind->letter));
 
+	if (Option.gtags == 0 && tag->type == GTAGS_REFERENCE)
+		return r;
+
 	if (tag->name [0] == '\0')
 		error (WARNING, "ignoring null tag in %s(line: %lu)", vStringValue (File.name), tag->lineNumber);
 	else if (TagFile.cork)
@@ -1126,6 +1137,7 @@ extern void initTagEntryFull (tagEntryInfo *const e, const char *const name,
 	e->filePosition    = filePosition;
 	e->sourceFileName  = sourceFileName;
 	e->name            = name;
+	e->type            = GTAGS_DEFINITION;
 	e->extensionFields.scopeIndex     = SCOPE_NIL;
 	e->kind = kind;
 }

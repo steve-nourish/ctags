@@ -185,6 +185,7 @@ optionValues Option = {
 	FALSE,	    /* --quiet */
 	FALSE,	    /* --_allow-xcmd-in-homedir */
 	FALSE,	    /* --_fatal-warnings */
+	FALSE,      /* --gtags */
 #ifdef DEBUG
 	0, 0        /* -D, -b */
 #endif
@@ -279,6 +280,9 @@ static optionDescription LongOptionDescription [] = {
  {1,"       o shebang even the input file is not executable,"},
  {1,"       o emacs mode specification at the beginning and end of input file, and"},
  {1,"       o vim syntax specification at the end of input file."},
+ {1,"  --gtags"},
+ {1,"       Print a type string for gtags at the head of each tag."},
+ {1,"       This option is valid only with the -x option."},
  {1,"  --help"},
  {1,"       Print this option summary."},
  {1,"  --if0=[yes|no]"},
@@ -2174,6 +2178,7 @@ static booleanOption BooleanOptions [] = {
 	{ "verbose",        &Option.verbose,                FALSE, STAGE_ANY },
 	{ "_allow-xcmd-in-homedir", &Option.allowXcmdInHomeDir, TRUE, ACCEPT(Etc)|ACCEPT(LocalEtc) },
 	{ "_fatal-warnings",&Option.fatalWarnings,          FALSE, STAGE_ANY },
+	{ "gtags",          &Option.gtags,                  FALSE, STAGE_ANY },
 };
 
 /*
