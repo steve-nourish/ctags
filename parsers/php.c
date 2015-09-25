@@ -331,6 +331,21 @@ static void makeSimplePhpTag (const tokenInfo *const token, const phpKind kind,
 	}
 }
 
+static void makeReferencePhpTag (const tokenInfo *const token, const phpKind kind,
+							  const accessType access)
+{
+	if (PhpKinds[kind].enabled)
+	{
+		tagEntryInfo e;
+
+		initPhpEntry (&e, token, kind, access);
+
+		e.type = GTAGS_REFERENCE;
+
+		makeTagEntry (&e);
+	}
+}
+
 static void makeNamespacePhpTag (const tokenInfo *const token, const vString *const name)
 {
 	if (PhpKinds[K_NAMESPACE].enabled)
@@ -1425,6 +1440,10 @@ static void enterScope (tokenInfo *const parentToken,
 
 			case TOKEN_VARIABLE:
 				readNext = parseVariable (token);
+				break;
+
+			case TOKEN_IDENTIFIER:
+				makeReferencePhpTag (token, K_FUNCTION, CurrentStatement.access);
 				break;
 
 			default: break;
